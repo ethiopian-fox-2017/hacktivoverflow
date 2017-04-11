@@ -5,8 +5,7 @@ let Schema = mongoose.Schema
 let userSchema = new Schema({
   username: {type: String, unique: true, uniqueCaseInsensitive: true, required: true},
   password: {type: String, required: true},
-  questionId: [{type: Schema.Types.ObjectId, ref: 'Question'}],
-  answerId: [{type: Schema.Types.ObjectId, ref: 'Answer'}],
+  postId: [{type: Schema.Types.ObjectId, ref: 'Post'}],
   voteId: [{type: Schema.Types.ObjectId, ref: 'Vote'}]
 })
 userSchema.plugin(uniqueValidator)

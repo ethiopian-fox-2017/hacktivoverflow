@@ -5,7 +5,7 @@ let answerSchema = new Schema({
   userId: {type: Schema.Types.ObjectId, ref: 'User'},
   title: {type: String, required: true},
   content: {type: String, required: true},
-  votes: Number
+  votes: [{type: Schema.Types.ObjectId, ref: 'Vote'}]
 })
 
 const Answer = mongoose.model('Answer', answerSchema)

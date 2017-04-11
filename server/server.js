@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const port = 3000 || process.env.PORT
 
 /* App Config */
+mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost/hacktivoverflow')
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error'))

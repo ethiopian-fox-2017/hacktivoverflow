@@ -1,12 +1,19 @@
 const mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
-let postSchema = new Schema({
-  userId: {type: Schema.Types.ObjectId, ref: 'User'},
+let answerSchema = new Schema({
+  userId: {type: String, ref: 'User'},
   title: String,
   content: String,
-  postType:{type:String, enum: ['q','a']},
   votes: [{type: Schema.Types.ObjectId, ref: 'Vote'}]
+})
+
+let postSchema = new Schema({
+  userId: {type: String, ref: 'User'},
+  title: String,
+  content: String,
+  votes: [{type: Schema.Types.ObjectId, ref: 'Vote'}]
+  answers: [answerSchema]
 })
 
 const Post = mongoose.model('Post', postSchema)

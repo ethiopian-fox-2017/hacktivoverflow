@@ -25,7 +25,7 @@ module.exports = {
         res.send({success: false, msg: 'User not found'})
       } else {
         if(pwHash.verify(req.body.password, user.password)) {
-          let token = jwt.sign({id: user._id, username: user.username}, process.env.SECRET_KEY)
+          let token = jwt.sign({username: user.username}, process.env.SECRET_KEY)
           res.send({success: true, data: token, msg: 'Login success'})
         } else {
           res.send({success: false, msg: 'Login failed'})

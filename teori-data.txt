@@ -1,0 +1,88 @@
+*User1: - username: Husni
+				- password: kucinggarong
+				- [
+					  question:
+							title:  kaki ayam
+							content: berapa jumlah kaki ayam?
+					]
+				- [
+						answer: 
+							title: jawab kaki monyet
+							content: 2
+					]
+				-	vote: 0
+
+*User2: - username: Habil
+				- password: 12345
+				- [
+						question:
+							title: kaki kambing
+							content: berapa jumlah kaki kambing?
+					]
+				- [
+						answer: 
+							title: jawab kaki ayam
+							content: 2
+					]
+				-	vote: 0 
+
+*User3: - username: Jonny
+				- password: meongmeong
+				- [
+						question:
+							title: kaki monyet
+							content:  berapa jumlah kaki monyet?
+					]
+				- [
+						answer: 
+							title: jawab kaki kambing
+							content: 4
+					]
+				-	vote: 0
+
+
+*Question1:  - title: kaki monyet 
+	           - content: berapa jumlah kaki monyet?
+	           - amount_vote: 0
+	           - user: Jonny
+
+*Question2:  - title: kaki kambing
+	           - content: berapa jumlah kaki kambing?
+	           - amount_vote: 0
+	           - user: Habil
+
+*Question3:  - title: kaki ayam
+	           - content: berapa jumlah kaki ayam?
+	           - amount_vote: 0
+	           - user: Husni
+
+
+*Answer1:  	 - title: jawab kaki monyet 
+	           - content: 2
+	           - amount_vote: 0
+	           - user: Husni
+
+*Answer2:    - title: jawab kaki kambing
+	           - content: 4
+	           - amount_vote: 0
+	           - user: Jonny
+
+*Answer3:    - title: jawab kaki ayam
+	           - content: 2
+	           - amount_vote: 0
+	           - user: Habil
+
+
+*Vote1:      - vote_title: quest kaki ayam
+						 - total_vote: 0
+						 - [
+						 			user: 
+						 				username:
+						 	 ]
+
+*Vote2:      - vote_title: answer kaki ayam
+						 - total_vote: 0
+						 - [
+						 			user: 
+						 				username:
+						 	 ]

@@ -1,13 +1,17 @@
-var Thread = require('../models/threadModel');
-var User   = require('../models/userModel');
-var Answer = require('../models/answerModel');
+const Thread   = require('../models/threadModel');
+const User     = require('../models/userModel');
+const Answer   = require('../models/answerModel');
+const passHash = require('password-hash');
+const jwt      = require('jsonwebtoken');
+require('dotenv').config()
 
 var user={}
 
 user.add = (req,res,next) => {
+  let password = passHash.generate(req.body.password);
   User.create({
     "username"  : req.body.username,
-    "password"  : req.body.password,
+    "password"  : password,
     "joined_at" : new Date()
   }, (err,result) => {
     if(err){
@@ -79,6 +83,27 @@ user.delete = (req,res,next) => {
         }
       });
     }
+  });
+}
+user.signup = (req,res,next) => {
+  let password = passHash.generate(req.body.password);
+  User.create({
+    "username"  : req.body.username,
+    "password"  : password,
+    "joined_at" : new Date()
+  }, (err,result) => {
+    if(err){
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
+}
+user.login = (req,res,next) => {
+  res.send({
+    user: req.user,
+    token: jwt.sign({id:user._id, username:user.username}, process.env.SECRETKEYS),
+    isLogin: true
   });
 }
 

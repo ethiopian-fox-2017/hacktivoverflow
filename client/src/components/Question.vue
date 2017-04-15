@@ -24,20 +24,14 @@
                 </tr>
                 <tr>
                   <td>{{ thread.author[0].username }}</td>
-                  <td>{{ thread.created_at }}</td>
-                  <td>{{ thread.update_at }}</td>
+                  <td>{{ new Date(thread.created_at).toLocaleString() }}</td>
+                  <td>{{ new Date(thread.created_at).toLocaleString() }}</td>
                 </tr>
               </tbody>
             </table>
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
-              Answer
-            </button>
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
-              Update
-            </button>
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
-              Delete
-            </button>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer" @click='answer(thread)'>Answer</button>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#updateQuestion" @click='update(thread)'>Update</button>
+            <button type="button" class="btn btn-primary btn-lg" @click="delThread(thread)">Delete</button>
           </div>
         </td>
       </tr>
@@ -47,9 +41,30 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+  props:['thread'],
+  methods:{
+    update(thread){
+      this.$emit('update',thread)
+    },
+    answer(thread){
+
+    },
+    delThread(thread){
+      axios.delete('http://localhost:3000/thread/'+thread._id,{headers: {'token': window.localStorage.getItem('token')}})
+      .then(res => {
+        location.href='/#/index'
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
+  }
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+
 </style>

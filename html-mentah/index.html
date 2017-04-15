@@ -150,6 +150,7 @@
       <!-- navigasi -->
       <!-- main -->
       <div class="row">
+        <!-- post -->
         <div class="col-xs-9">
           <div v-for="thread in threads">
           <div class="myquestionHeader">
@@ -247,7 +248,8 @@
           <!-- jawaban -->
           </div>
         </div>
-        <!-- main -->
+        <!-- post -->
+        <!-- sidebar -->
         <div class="col-xs-3">
           <div class="new-question">
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#question">
@@ -258,7 +260,9 @@
             <a href="#">{{ thread.title }}</a>
           </div>
         </div>
+        <!-- sidebar -->
       </div>
+      <!-- main -->
     </div>
     <script src="script.js" charset="utf-8"></script>
     <!-- built files will be auto injected -->

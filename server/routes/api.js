@@ -5,7 +5,7 @@ var user    = require('../controllers/userController');
 var answer  = require('../controllers/answerController');
 
 /* thread routing */
-router.post('/thread/user/:id', thread.add);
+router.post('/thread/:userid', thread.add);
 router.get('/thread', thread.findAll);
 router.get('/thread/:id', thread.findOne);
 router.delete('/thread/:id', thread.delete);

@@ -1,5 +1,6 @@
 var Thread = require('../models/threadModel');
 var User   = require('../models/userModel');
+var Answer = require('../models/answerModel');
 
 var thread={}
 
@@ -8,52 +9,38 @@ thread.add = (req,res,next) => {
   Thread.create({
     "title"      : req.body.title,
     "content"    : req.body.content,
-    "author"     : [req.params.id],
+    "author"     : [req.params.userid],
     "created_at" : new Date()
   }, (err,result) => {
     if(err){
       res.send(err);
     } else {
-      User.findOneAndUpdate({
-        _id : req.params.id
-      },{
-        $push: {"thread": result._id}
-      },{
-        safe: true,
-        upsert: true,
-        new : true}
-      ,(err,user) => {
-        if (err) {
-          res.send (err);
-        } else {
-          res.send (user);
-        }
-      });
+      res.send(result)
     }
   });
 }
 thread.findAll = (req,res,next) => {
   Thread
   .find()
-  .populate('author', ['username'])
-  .exec((error,thread) => {
+  .populate('author')
+  .exec((error,result) => {
     if(error){
       res.send(error);
     } else {
-      res.send(thread);
+      res.send(result);
     }
   });
 }
 thread.findOne = (req,res,next) => {
   Thread.findOne({
     _id : req.params.id
-  },(err,thread) => {
+  },(err,result) => {
     if (err) {
-      res.send ('Thread not found');
+      res.send (err);
     } else {
-      res.send (thread);
+      res.send (result);
     }
-  })
+  });
 }
 thread.update = (req,res,next) => {
   Thread.findByIdAndUpdate({
@@ -68,11 +55,11 @@ thread.update = (req,res,next) => {
   {
     new:true
   }
-  , (err,thread) => {
+  , (err,result) => {
     if (err) {
       res.send (err);
     } else {
-      res.send (thread);
+      res.send (result);
     }
   });
 }
@@ -83,33 +70,16 @@ thread.delete = (req,res,next) => {
     if (err) {
       res.send(err);
     } else {
-      let userid = result.author;
-      let threadid = result._id;
-      User.findOne({
-        _id : userid
-      }, (err,user) => {
+      Answer.remove({
+        thread : req.params.id
+      },(err,result) => {
         if (err) {
           res.send(err);
         } else {
-          console.log(user.thread)
-          let threadArr = user.thread.filter((value) => {
-            return value.toString() !== threadid.toString()
-          })
-          User.update({
-            _id : userid
-          },{
-            "thread" : threadArr
-          },(err,result) => {
-            if (err) {
-              res.send(err);
-            } else {
-              res.send(result);
-            }
-          })
+          res.send(result)
         }
-      })
+      });
     }
   });
 }
-
 module.exports = thread

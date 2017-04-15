@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var answerSchema = new Schema ({
   "content"    : {type: String, required: true},
-  "created_by" : [{type: Schema.Types.ObjectId, ref: 'User' }],
-  "thread"     : [{type: Schema.Types.ObjectId, ref: 'Thread' }],
+  "author"     : [{type: Schema.Types.ObjectId, ref: 'User' }],
+  "thread"     : {type: String, required: true},
   "created_at" : {type: Date},
   "update_at"  : {type: Date},
   "upvote"     : [{type: Schema.Types.ObjectId, ref: 'User' }],
@@ -12,5 +12,6 @@ var answerSchema = new Schema ({
 });
 
 var Answer = mongoose.model('Answer', answerSchema);
+
 
 module.exports = Answer

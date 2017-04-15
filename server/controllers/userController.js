@@ -1,5 +1,7 @@
-var User = require('../models/userModel');
 var Thread = require('../models/threadModel');
+var User   = require('../models/userModel');
+var Answer = require('../models/answerModel');
+
 var user={}
 
 user.add = (req,res,next) => {
@@ -16,27 +18,25 @@ user.add = (req,res,next) => {
   });
 }
 user.findAll = (req,res,next) => {
-  User
-  .find()
-  .populate('thread',['title'])
-  .populate('answer',['content'])
-  .exec((error,user) => {
+  User.find({
+
+  },(error,result) => {
     if(error){
       res.send(error);
     } else {
-      res.send(user);
+      res.send(result);
     }
   });
 }
 user.findOne = (req,res,next) => {
   User
-  .findOne({_id : req.params.id})
-  .populate('thread', ['title'])
-  .exec((error,user) => {
+  .findOne({
+    _id : req.params.id
+  },(error,result) => {
     if(error){
       res.send(error);
     } else {
-      res.send(user);
+      res.send(result);
     }
   });
 }
@@ -45,19 +45,19 @@ user.update = (req,res,next) => {
     _id : req.params.id
   },{
     "username"  : req.body.username,
-    "password"  : req.body.password,
-  }, (err,user) => {
+    "password"  : req.body.password
+  }, (err,result) => {
     if (err) {
       res.send(err);
     } else {
-      res.send(user);
+      res.send(result);
     }
   });
 }
 user.delete = (req,res,next) => {
   User.findOneAndRemove({
     _id : req.params.id
-  },(err,user) => {
+  },(err,result) => {
     if (err) {
       res.send(err);
     } else {
@@ -67,7 +67,15 @@ user.delete = (req,res,next) => {
         if (err) {
           res.send(err);
         } else {
-          res.send(result)
+          Answer.remove({
+            author : req.params.id
+          },(err,result) => {
+            if (err) {
+              res.send(err);
+            } else {
+              res.send(result)
+            }
+          });
         }
       });
     }

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>arfanizar</title>
+  </head>
+  <body>
+    <!-- modal login -->
+    <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Don't have account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signup">Sign Up</a></h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="myUsername">Username</label>
+                <input type="text" class="form-control" id="myUsername" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <label for="myPassword">Password</label>
+                <input type="password" class="form-control" id="myPassword" placeholder="Password">
+              </div>
+              <button type="submit" class="btn btn-default">Login</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal login -->
+    <!-- modal signup -->
+    <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Your account informations</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="myUsername">Username</label>
+                <input type="text" class="form-control" id="myUsername" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <label for="myPassword">Password</label>
+                <input type="password" class="form-control" id="myPassword" placeholder="Password">
+              </div>
+              <button type="submit" class="btn btn-default">Sign Up</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal signup -->
+    <!-- modal question -->
+    <div class="modal fade" id="question" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">New Question</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="myTitle">Title</label>
+                <input type="text" class="form-control" id="myTitle" placeholder="Write here...">
+              </div>
+              <div class="form-group">
+                <label for="myQuestion">Question</label>
+                <textarea class="form-control" rows="5" id="myQuestion" placeholder="Write here..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Post Question</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal question -->
+    <!-- modal answer -->
+    <div class="modal fade" id="answer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">New Answer</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="myTitle">Title</label>
+                <input type="text" class="form-control" id="myTitle" placeholder="Write here...">
+              </div>
+              <div class="form-group">
+                <label for="myAnswer">Answer</label>
+                <textarea class="form-control" rows="5" id="myAnswer" placeholder="Write here..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Post Answer</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal answer -->
+    <!-- main -->
+    <div id="app" class="container">
+      <!-- navigasi -->
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Hacktivoverflow</a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#" data-toggle="modal" data-target="#signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+              <li><a href="#" data-toggle="modal" data-target="#login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+      <!-- navigasi -->
+      <!-- main -->
+      <div class="row">
+        <!-- post -->
+        <div class="col-xs-9">
+          <div v-for="thread in threads">
+          <div class="myquestionHeader">
+            <h1>{{ thread.title }}</h1>
+          </div>
+          <!-- pertanyaan -->
+          <div class="myquestion">
+            <table class="table">
+              <tr>
+                <td class="voting">
+                  <div class="vote">
+                    <a class="glyphicon glyphicon-chevron-up" href=""></a>
+                    <span itemprop="upvoteCount" class="vote-count-post ">10</span>
+                    <a class="glyphicon glyphicon-chevron-down" href=""></a>
+                  </div>
+                </td>
+                <td class="mypostcell">
+                  <div class="mypost-text">
+                    <p>{{ thread.content }}</p>
+                  </div>
+                  <div class="mypost-footer">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td>created by:</td>
+                          <td>created at:</td>
+                          <td>updated at:</td>
+                        </tr>
+                        <tr>
+                          <td>{{ thread.author[0].username }}</td>
+                          <td>{{ thread.created_at }}</td>
+                          <td>{{ thread.update_at }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
+                      Answer
+                    </button>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
+                      Update
+                    </button>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- pertanyaan -->
+          <div class="myanswerHeader">
+            <h3>JAWABAN ({{ thread.answers.length }})</h3>
+          </div>
+          <!-- jawaban -->
+          <div class="myanswer" v-for='answer in thread.answers'>
+            <table class="table">
+              <tr>
+                <td class="voting">
+                  <div class="vote">
+                    <a class="glyphicon glyphicon-chevron-up" href=""></a>
+                    <span itemprop="upvoteCount" class="vote-count-post ">10</span>
+                    <a class="glyphicon glyphicon-chevron-down" href=""></a>
+                  </div>
+                </td>
+                <td class="mypostcell">
+                  <div class="mypost-text">
+                    <p>{{ answer.content }}</p>
+                  </div>
+                  <div class="mypost-footer">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td>created by:</td>
+                          <td>created at:</td>
+                          <td>updated at:</td>
+                        </tr>
+                        <tr>
+                          <td>{{ answer.author[0].username }}</td>
+                          <td>{{ answer.created_at }}</td>
+                          <td>{{ answer.updated_at }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
+              Update
+            </button>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer">
+              Delete
+            </button>
+          </div>
+          <!-- jawaban -->
+          </div>
+        </div>
+        <!-- post -->
+        <!-- sidebar -->
+        <div class="col-xs-3">
+          <div class="new-question">
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#question">
+              New Question
+            </button>
+          </div><br>
+          <div class="sidebar" v-for="thread in threads">
+            <a href="#">{{ thread.title }}</a>
+          </div>
+        </div>
+        <!-- sidebar -->
+      </div>
+      <!-- main -->
+    </div>
+    <script src="script.js" charset="utf-8"></script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

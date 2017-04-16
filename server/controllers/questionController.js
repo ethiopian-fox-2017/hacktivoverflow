@@ -4,7 +4,7 @@ var Answer = require('../models/answer');
 
 var addQuestion = function (req, res) {
   Question.create({
-    author: req.body.author, //insert USER ID in the Body of POSTMAN
+    author: req.body.decoded.user, //insert USER ID in the Body of POSTMAN
     title: req.body.title,
     content: req.body.content
   }, function(err, result) {
@@ -17,9 +17,10 @@ var addQuestion = function (req, res) {
 }
 
 var getQuestions = function(req,res) {
-  //console.log(req.headers);
+  console.log("REQ BODY: ", req.body);
   Question.find()
   .populate('author', ['username'])
+  .populate('answer.user')
   .exec(function(err, question){
     if(err){
       res.send(err)
@@ -32,7 +33,9 @@ var getQuestions = function(req,res) {
 var getOneQuestion = function(req, res) {
   Question.findOne({
     _id: req.params.questionId
-  }, function(err, question) {
+  })
+  .populate('author answer.user')
+  .exec(function(err, question) {
     if(err){
       res.send(err)
     } else {
@@ -69,8 +72,8 @@ var deleteQuestion = function(req, res) {
 }
 
 var upvoteQuestion = function(req, res) {
-  console.log('ini question');
-  console.log('decoded : ', req.body.decoded);
+  console.log('ini klik upvote question');
+  console.log('decoded : ', req.body.decoded.user);
     Question.findOne({
       '_id': req.params.questionId
     }, function(err, result) {

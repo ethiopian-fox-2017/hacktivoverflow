@@ -1,5 +1,7 @@
 <template>
-  <div class="navigasi"></div>
+  <div class="navigasi">
+    <p><center>HACKTIV-OVERFLOW</center></p>
+  </div>
 </template>
 
 
@@ -8,8 +10,9 @@
 
 <style>
   .navigasi {
-    height: 80px;
-    background-color: green;
+    height: 70px;
+    background-color: DarkRed;
     color: white;
+    font-size: 40pt;
   }
 </style>

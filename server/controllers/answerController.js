@@ -7,7 +7,7 @@ var answering = function(req, res) {
   Question.findOneAndUpdate({
     _id: req.params.questionId
   },{
-      $push: { answer: req.body }
+      $push: { answer: {user: req.body.decoded.user, content: req.body.content} }
   },{
     safe: true,
     upsert: true,

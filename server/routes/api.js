@@ -10,8 +10,10 @@ var check    = require('../helper/verify.js')
 router.post('/thread/:userid', check.verify, thread.add);
 router.get('/thread', check.verify, thread.findAll);
 router.get('/thread/:id', check.verify, thread.findOne);
-router.delete('/thread/:id', check.verify, thread.delete);
 router.put('/thread/:id', check.verify, thread.update);
+router.patch('/thread/:id/upvote/:userid', check.verify, thread.voteup);
+router.patch('/thread/:id/downvote/:userid', check.verify, thread.votedown);
+router.delete('/thread/:id', check.verify, thread.delete);
 
 /* user routing. */
 router.post('/user', user.add);
@@ -25,6 +27,9 @@ router.post('/signin', passport.authenticate('local',{ session: false }), user.l
 /* answer routing. */
 router.post('/answer/:userid/:threadid', check.verify, answer.add)
 router.get('/answer', check.verify, answer.findAll);
+router.put('/answer/:id', check.verify, answer.update);
+router.patch('/answer/:id/upvote/:userid', check.verify, answer.voteup);
+router.patch('/answer/:id/downvote/:userid', check.verify, answer.votedown);
 router.delete('/answer/:id', check.verify, answer.delete);
 
 module.exports = router;

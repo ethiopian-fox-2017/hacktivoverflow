@@ -46,7 +46,7 @@
                 <label for="myPassword">Password</label>
                 <input type="password" class="form-control" id="myPassword" v-model="datauser.password" placeholder="Password">
               </div>
-              <button type="submit" class="btn btn-default" @click="signUp">Sign Up</button>
+              <button type="submit" class="btn btn-default" data-dismiss="modal"@click="signUp">Sign Up</button>
             </form>
           </div>
           <div class="modal-footer">
@@ -67,14 +67,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Hacktivoverflow</a>
+          <a class="navbar-brand" href="#/index">Hacktivoverflow</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li v-if="isLogin == false"><a href="#" data-toggle="modal" data-target="#signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li v-if="isLogin == false"><a href="#" data-toggle="modal" data-target="#login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-            <li v-if="isLogin == true"><a href="#">My Profile</a></li>
+            <li v-if="isLogin == true"><a href="#" @click="logout">Logout</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
@@ -100,6 +100,7 @@ export default {
       let self=this;
       axios.post('http://localhost:3000/signup',self.datauser)
       .then(res => {
+        location.reload()
         console.log(res.data);
       })
       .catch(err => {
@@ -112,16 +113,23 @@ export default {
       .then(res => {
         window.localStorage.setItem('token',res.data.token);
         window.localStorage.setItem('user',res.data.user._id);
-        self.isLogin = res.data.isLogin
-        location.href = '/#/index'
+        self.isLogin = res.data.isLogin;
+        location.reload()
       })
       .catch(err => {
         alert(err)
       })
+    },
+    logout(){
+      window.localStorage.clear()
+      location.reload()
     }
   },
   mounted(){
-    if(window.localStorage.getItem('token')){this.isLogin = true}
+    if(window.localStorage.getItem('token')){
+      this.isLogin  = true
+      location.href = '/#/index'
+    }
   }
 }
 </script>

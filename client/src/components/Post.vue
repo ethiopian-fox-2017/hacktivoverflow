@@ -12,9 +12,9 @@
             <form>
               <div class="form-group">
                 <label for="myAnswer">Answer</label>
-                <textarea class="form-control" rows="5" id="myAnswer" placeholder="Write here..."></textarea>
+                <textarea class="form-control" rows="5" id="myAnswer" v-model="answer.content" placeholder="Write here..."></textarea>
               </div>
-              <button type="submit" class="btn btn-success">Post Answer</button>
+              <button type="submit" class="btn btn-success" data-dismiss="modal" @click='postAnswer'>Post Answer</button>
             </form>
           </div>
           <div class="modal-footer">
@@ -30,15 +30,15 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">New Answer</h4>
+            <h4 class="modal-title" id="myModalLabel">Update Answer</h4>
           </div>
           <div class="modal-body">
             <form>
               <div class="form-group">
                 <label for="myAnswer">Answer</label>
-                <textarea class="form-control" rows="5" id="myAnswer" placeholder="Write here..."></textarea>
+                <textarea class="form-control" rows="5" id="myAnswer" v-model="updAnswer.content" placeholder="Write here..."></textarea>
               </div>
-              <button type="submit" class="btn btn-success">Post Answer</button>
+              <button type="submit" class="btn btn-success" data-dismiss="modal" @click="postUpdateAnswer">Post Answer</button>
             </form>
           </div>
           <div class="modal-footer">
@@ -66,7 +66,7 @@
                 <label for="myQuestion">Question</label>
                 <textarea class="form-control" rows="5" id="myQuestion" v-model="updThread.content" placeholder="Write here..."></textarea>
               </div>
-              <button type="submit" class="btn btn-success" data-dismiss="modal" @click="updateThread">Post Question</button>
+              <button type="submit" class="btn btn-success" data-dismiss="modal" @click="postUpdateThread">Post Question</button>
             </form>
           </div>
           <div class="modal-footer">
@@ -76,20 +76,37 @@
       </div>
     </div>
     <!-- modal updateQuestion -->
-    <div v-for="thread in threads">
-    <div class="myquestionHeader">
-      <h2>{{ thread.title }}</h2>
+    <div v-if="showOne == false">
+      <table>
+        <tbody>
+          <tr>
+            <th>Pertanyaan</th>
+            <th>Jawaban</th>
+          </tr>
+          <tr v-for="thread in threads">
+            <td class='table-question'><a href="#/index" @click="detail(thread)" ><p>{{ thread.title }}</p></a></td>
+            <td class='table-answer'><p>{{ thread.answers.length }}</p></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <!-- pertanyaan -->
-    <Question @update="update" :thread='thread'></Question>
-    <!-- pertanyaan -->
-    <div class="myanswerHeader">
-      <h3>JAWABAN ({{ thread.answers.length }})</h3>
+    <div v-if="showOne == true">
+      <button type="button" class="btn btn-success btn-sm" @click='list()'>Hide</button>
+      <div class="myquestionHeader">
+        <h2>{{ oneThread.title }}</h2>
+      </div>
+      <!-- pertanyaan -->
+      <Question  @update="update" :thread='oneThread'></Question>
+      <!-- pertanyaan -->
+      <div class="myanswerHeader">
+        <h4>Jawaban ({{ oneThread.answers.length }})</h4>
+      </div>
+      <!-- jawaban -->
+      <Answer @updateAnswer="updateAnswer" :answers='oneThread.answers'></Answer>
+      <!-- jawaban -->
+      <div class="myclearence"></div>
     </div>
-    <!-- jawaban -->
-    <Answer :answers='thread.answers'></Answer>
-    <!-- jawaban -->
-    </div>
+    <div class="myclearence"></div>
   </div>
 </template>
 
@@ -105,18 +122,25 @@ export default {
   props:['threads'],
   data(){
     return {
-      updThread: {
-        _id:'',
-        title: '',
-        content: ''
-      }
+      updThread: '',
+      answer:{
+        content:''
+      },
+      updAnswer:'',
+      oneThread:'',
+      showOne: false
     }
-  },
+  }
+  ,
   methods:{
     update(thread){
       this.updThread = thread;
     },
-    updateThread(){
+    updateAnswer(answer){
+      this.updAnswer = answer
+      console.log(this.updAnswer.content);
+    },
+    postUpdateThread(){
       let self = this
       let threadId = self.updThread._id
       console.log(threadId);
@@ -126,12 +150,53 @@ export default {
       },
       {headers: {'token': window.localStorage.getItem('token')}})
       .then(res => {
-        location.href='/#/index'
+        location.reload()
         console.log(res);
       })
       .catch(err => {
         console.log(err);
       })
+    },
+    postAnswer(){
+      let self = this
+      let threadId = self.updThread._id
+      let userId = window.localStorage.getItem('user')
+      axios.post(`http://localhost:3000/answer/${userId}/${threadId}`,{
+        content: self.answer.content
+      },
+      {headers: {'token': window.localStorage.getItem('token')}})
+      .then(res => {
+        location.reload()
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    },
+    postUpdateAnswer(){
+      let self = this
+      let answerId = self.updAnswer._id
+      console.log(answerId);
+      console.log(self.updAnswer.content);
+      axios.put('http://localhost:3000/answer/'+answerId,{
+        content: self.updAnswer.content
+      },
+      {headers: {'token': window.localStorage.getItem('token')}})
+      .then(res => {
+        location.reload()
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    },
+    detail(thread){
+      this.oneThread = thread;
+      this.showOne = true;
+    },
+    list(){
+      this.showOne = false;
+      this.oneThread = '';
     }
   }
 }

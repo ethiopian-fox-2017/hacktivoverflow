@@ -82,7 +82,6 @@ export default {
           });
           myFirstPromise.then((res) => {
             self.threads = thr.data
-            console.log(self.threads);
           });
         })
         .catch((err) => {
@@ -102,6 +101,7 @@ export default {
       },
       {headers: {'token': window.localStorage.getItem('token')}})
       .then(res => {
+        location.reload()
         console.log(res);
       })
       .catch(err => {
@@ -110,7 +110,11 @@ export default {
     }
   },
   mounted() {
-    this.getThread()
+    if(window.localStorage.getItem('token')){
+      this.getThread()
+    } else {
+      location.href = '/#/'
+    }
   }
 }
 </script>
@@ -125,6 +129,9 @@ export default {
     text-align: center;
     padding-top: 10px;
     padding-right: 15px
+  }
+  .vote{
+    text-align: center;
   }
   .mypostcell{
     padding-top: 10px;
@@ -142,5 +149,23 @@ export default {
 
   .new-question {
     text-align: center;
+  }
+
+  .myclearence{
+    padding: 10px 0px
+  }
+
+  .myanswerHeader{
+    display: inline-block;
+  }
+
+  .table-question{
+    width: 90%;
+    max-width: 90%;
+  }
+
+  .table-answer{
+    width: 10%;
+    max-width: 10;
   }
 </style>

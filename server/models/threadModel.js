@@ -5,8 +5,10 @@ var threadSchema = new Schema ({
   "title"      : {type: String, required: true},
   "content"    : {type: String, required: true},
   "author"     : [{type: Schema.Types.ObjectId, ref: 'User' }],
-  "created_at" : {type: Date},
-  "update_at"  : {type: Date}
+  "createdAt"  : {type: Date},
+  "updatedAt"  : {type: Date},
+  "upvote"     : [{type: Schema.Types.ObjectId, ref: 'User' }],
+  "downvote"   : [{type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
 var Thread = mongoose.model('Thread', threadSchema);

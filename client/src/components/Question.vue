@@ -5,9 +5,9 @@
       <tr>
         <td class="voting">
           <div class="vote">
-            <a class="glyphicon glyphicon-chevron-up" href=""></a>
-            <span itemprop="upvoteCount" class="vote-count-post ">10</span>
-            <a class="glyphicon glyphicon-chevron-down" href=""></a>
+            <a class="glyphicon glyphicon-chevron-up" href="#" @click='voteUp(thread)'></a>
+            <span itemprop="upvoteCount" class="vote-count-post ">{{ vote = thread.upvote.length - thread.downvote.length }}</span>
+            <a class="glyphicon glyphicon-chevron-down" href="#" @click='voteDown(thread)'></a>
           </div>
         </td>
         <td class="mypostcell">
@@ -24,14 +24,14 @@
                 </tr>
                 <tr>
                   <td>{{ thread.author[0].username }}</td>
-                  <td>{{ new Date(thread.created_at).toLocaleString() }}</td>
-                  <td>{{ new Date(thread.created_at).toLocaleString() }}</td>
+                  <td>{{ new Date(thread.createdAt).toLocaleString() }}</td>
+                  <td>{{ new Date(thread.updatedAt).toLocaleString() }}</td>
                 </tr>
               </tbody>
             </table>
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#answer" @click='answer(thread)'>Answer</button>
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#updateQuestion" @click='update(thread)'>Update</button>
-            <button type="button" class="btn btn-primary btn-lg" @click="delThread(thread)">Delete</button>
+            <button v-if="thread.author[0]._id != user.id" type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#answer" @click='update(thread)'>Answer</button>
+            <button v-if="thread.author[0]._id == user.id" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateQuestion" @click='update(thread)'>Update</button>
+            <button v-if="thread.author[0]._id == user.id" type="button" class="btn btn-danger btn-sm" @click="delThread(thread)">Delete</button>
           </div>
         </td>
       </tr>
@@ -44,17 +44,52 @@
 import axios from 'axios'
 export default {
   props:['thread'],
+  data(){
+    return {
+      user:{
+        id: window.localStorage.getItem('user')
+      }
+    }
+  },
   methods:{
     update(thread){
-      this.$emit('update',thread)
-    },
-    answer(thread){
-
+      this.$emit('update',thread);
     },
     delThread(thread){
-      axios.delete('http://localhost:3000/thread/'+thread._id,{headers: {'token': window.localStorage.getItem('token')}})
+      var result = confirm("Want to delete?");
+      if (result) {
+        axios.delete('http://localhost:3000/thread/'+thread._id,{headers: {'token': window.localStorage.getItem('token')}})
+        .then(res => {
+          location.reload()
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      }
+    },
+    voteUp(thread){
+      let userId = window.localStorage.getItem('user')
+      axios.patch(`http://localhost:3000/thread/${thread._id}/upvote/${userId}`,{},{headers: {'token': window.localStorage.getItem('token')}})
       .then(res => {
         location.href='/#/index'
+        if(res.data === false){
+          alert('You have already voted this thread')
+        }
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    },
+    voteDown(thread){
+      let userId = window.localStorage.getItem('user')
+      axios.patch(`http://localhost:3000/thread/${thread._id}/downvote/${userId}`,{},{headers: {'token': window.localStorage.getItem('token')}})
+      .then(res => {
+        location.href='/#/index'
+        if(res.data === false){
+          alert('You have already voted this thread')
+        }
         console.log(res);
       })
       .catch(err => {

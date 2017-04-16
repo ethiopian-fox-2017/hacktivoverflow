@@ -10,7 +10,8 @@ answer.add = (req,res,next) => {
     "content"    : req.body.content,
     "author"     : req.params.userid,
     "thread"     : req.params.threadid,
-    "created_at" : new Date()
+    "createdAt"  : new Date(),
+    "updatedAt"  : new Date()
   }, (err,result) => {
     if(err){
       res.send(err);
@@ -49,17 +50,17 @@ answer.update = (req,res,next) => {
   },{
     $set: {
       content   : req.body.content,
-      update_at : new Date()
+      updatedAt  : new Date()
     }
   },
   {
     new:true
   }
-  , (err,answer) => {
+  , (err,result) => {
     if (err) {
       res.send (err);
     } else {
-      res.send (answer);
+      res.send (result);
     }
   });
 }
@@ -74,5 +75,84 @@ answer.delete = (req,res,next) => {
     }
   })
 }
-
+answer.voteup = (req,res,next) => {
+  Answer.findOne({
+    _id : req.params.id
+  },
+  (err,result) => {
+    if (err) {
+      res.send (err);
+    } else {
+      let voteup = result.upvote.map(instance => {
+        return instance == req.params.userid
+      })
+      let votedown = result.downvote.map(instance => {
+        return instance == req.params.userid
+      })
+      if (voteup.length == 0 && votedown.length == 0) {
+          Answer.findByIdAndUpdate({
+            _id : req.params.id
+          },{
+            $push: {
+              upvote   : req.params.userid
+            }
+          },
+          {
+            safe    :true,
+            upsert  :true,
+            new     :true
+          }
+          , (err,result) => {
+            if (err) {
+              res.send (err);
+            } else {
+              res.send (result);
+            }
+          });
+      } else {
+        res.send(false)
+      }
+    }
+  })
+}
+answer.votedown = (req,res,next) => {
+  Answer.findOne({
+    _id : req.params.id
+  },
+  (err,result) => {
+    if (err) {
+      res.send (err);
+    } else {
+      let voteup = result.upvote.map(instance => {
+        return instance == req.params.userid
+      })
+      let votedown = result.downvote.map(instance => {
+        return instance == req.params.userid
+      })
+      if (voteup.length == 0 && votedown.length == 0) {
+          Answer.findByIdAndUpdate({
+            _id : req.params.id
+          },{
+            $push: {
+              downvote   : req.params.userid
+            }
+          },
+          {
+            safe    :true,
+            upsert  :true,
+            new     :true
+          }
+          , (err,result) => {
+            if (err) {
+              res.send (err);
+            } else {
+              res.send (result);
+            }
+          });
+      } else {
+        res.send(false)
+      }
+    }
+  })
+}
 module.exports = answer

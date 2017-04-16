@@ -5,8 +5,8 @@ var answerSchema = new Schema ({
   "content"    : {type: String, required: true},
   "author"     : [{type: Schema.Types.ObjectId, ref: 'User' }],
   "thread"     : {type: String, required: true},
-  "created_at" : {type: Date},
-  "update_at"  : {type: Date},
+  "createdAt"  : {type: Date},
+  "updatedAt"  : {type: Date},
   "upvote"     : [{type: Schema.Types.ObjectId, ref: 'User' }],
   "downvote"   : [{type: Schema.Types.ObjectId, ref: 'User' }]
 });

@@ -6,7 +6,6 @@ const User = require('../controller/user')
 router.get('/user', User.listUser)
 router.post('/register', User.createUser)
 router.post('/login', User.login)
-router.put('/user/:username', User.editUser)
 router.delete('/user/:username', User.deleteUser)
 
 /* Post Routes */
@@ -16,12 +15,12 @@ router.get('/post')
 router.get('/post/:postId')
 
 // Post ask or answer
-router.post('/post/question/:username')
-router.post('/post/answer/:username/:postId')
+router.post('/post/question')
+router.post('/post/answer/:postId')
 
-// Update ask or answer
-router.put('/post/question/:postId')
-router.put('/post/answer/:username/:postId')
+// Votes
+router.get('/vote/question/:postId')
+router.get('/vote/answer/:postId/:answerId')
 
 // Delete ask or answer
 router.delete('/post/question/:postId')

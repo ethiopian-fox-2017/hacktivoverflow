@@ -5,10 +5,9 @@ let Schema = mongoose.Schema
 let userSchema = new Schema({
   username: {type: String, unique: true, uniqueCaseInsensitive: true, required: true},
   password: {type: String, required: true},
-  postId: [{type: Schema.Types.ObjectId, ref: 'Post'}],
-  voteId: [{type: Schema.Types.ObjectId, ref: 'Vote'}]
+  postId: [{type: Schema.Types.ObjectId, ref: 'Post'}]
 })
-userSchema.plugin(uniqueValidator)
+userSchema.plugin(uniqueValidator, {message: 'Error, username {PATH} exists'})
 
 const User = mongoose.model('User', userSchema)
 

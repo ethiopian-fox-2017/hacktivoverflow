@@ -12,62 +12,45 @@ module.exports = {
     })
     newUser.save((err, user)=> {
         if(err) {
-          res.send({success: false, msg: 'User failed to register'})
+          res.send(err)
         } else {
           console.log(`${req.body.username} added into Database`)
-          res.send({success: true, data: user, msg: 'Register success'})
+          res.send(user)
         }
     })
   },
   login : (req, res)=> {
-    user.findOne({ username: req.body.username}, (err, user)=> {
+    user.findOne({username: req.body.username}, (err, user)=> {
       if(err) {
-        res.send({success: false, msg: 'User not found'})
+        res.send(err)
       } else {
         if(pwHash.verify(req.body.password, user.password)) {
           let token = jwt.sign({username: user.username}, process.env.SECRET_KEY)
-          res.send({success: true, data: token, msg: 'Login success'})
+          res.set({'Authorization', 'Bearer '+token}).send('Login Success')
         } else {
-          res.send({success: false, msg: 'Login failed'})
+          res.send('Login Failed')
         }
       }
     })
   },
   listUser : (req, res)=> {
     User.find({})
-      // .populate('questionId answerId voteId')
+      .populate('postId')
       .exec((err, users)=> {
       if(err) {
-        res.send({success: false, msg: 'User failed to register'})
+        res.send(err)
       } else {
-        res.send({success: true, data: users, msg: ''})
+        res.send(users)
       }
     })
   },
   deleteUser : (req, res)=> {
-    User.findByIdAndRemove(req.params.objectId, (err, user)=> {
+    User.findOneAndRemove({username: req.params.username}, (err, user)=> {
       if(err){
-        res.send({success: false, msg: 'User delete failed'})
+        res.send(err)
       } else {
         console.log('Delete user success')
-        res.send({success: true, data: user, msg: ''})
-      }
-    })
-  },
-  editUser : (req, res)=> {
-    User.findOne({_id: req.params.objectId}, (err, user)=> {
-      if(err) {
-        res.send({success: false, msg: 'User not found'})
-      } else {
-        user.username = req.body.username ? req.body.username : user.username
-        user.password = req.body.password ? pwHash.generate(req.body.password) : user.password
-        user.save((err, data)=> {
-          if(err) {
-            res.send({success: false, msg: 'User update failed'})
-          } else {
-            res.send({success: true, data: user, msg: ''})
-          }
-        })
+        res.send(user)
       }
     })
   }

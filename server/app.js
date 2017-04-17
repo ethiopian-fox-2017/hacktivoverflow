@@ -9,7 +9,8 @@ const questions = require('./routes/questions');
 
 const mongoose = require('mongoose');
 const cors = require('cors')
-mongoose.connect('mongodb://localhost/hacktivoverflow2')
+//mongoose.connect('mongodb://localhost/hacktivoverflow2') //to connect with localhost
+mongoose.connect('mongodb://admin:admin123@ds163010.mlab.com:63010/hacktivoverflow')
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

@@ -17,7 +17,6 @@ var addQuestion = function (req, res) {
 }
 
 var getQuestions = function(req,res) {
-  console.log("REQ BODY: ", req.body);
   Question.find()
   .populate('author', ['username'])
   .populate('answer.user')
@@ -41,6 +40,18 @@ var getOneQuestion = function(req, res) {
     } else {
       res.send(question)
     }
+  })
+}
+
+var getQuestionsByAuthor = function(req, res) {
+  Question.find({
+    author: req.params.authorId
+  }, function (err, question) {
+     if(err){
+       res.send(err)
+     } else {
+       res.send(question)
+     }
   })
 }
 
@@ -149,5 +160,6 @@ module.exports = {
   editQuestion,
   deleteQuestion,
   upvoteQuestion,
-  downvoteQuestion
+  downvoteQuestion,
+  getQuestionsByAuthor
 }

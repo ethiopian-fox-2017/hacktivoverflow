@@ -45,6 +45,8 @@
 
 <script>
 import axios from 'axios'
+import serverUrl from '../serverlink'
+
 export default {
   data() {
     return {
@@ -58,7 +60,7 @@ export default {
   methods: {
       login: function(){
         let self = this;
-        axios.post('http://localhost:3000/login', {
+        axios.post(`${serverUrl}/login`, {
           username: self.username,
           password: self.password
         })
@@ -80,12 +82,12 @@ export default {
       },
       signup: function() {
         let self = this;
-        axios.post('http://localhost:3000/users', {
+        axios.post(`${serverUrl}/users`, {
           username: self.newUsername,
           password: self.newPassword
         })
         .then(function (){
-          window.location =  '/#/'
+          $('#myModal').modal('hide');
         })
       }
   }

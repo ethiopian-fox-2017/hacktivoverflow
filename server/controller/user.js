@@ -20,15 +20,15 @@ module.exports = {
     })
   },
   login : (req, res)=> {
-    user.findOne({username: req.body.username}, (err, user)=> {
+    User.findOne({username: req.body.username}, (err, user)=> {
       if(err) {
         res.send(err)
       } else {
         if(pwHash.verify(req.body.password, user.password)) {
-          let token = jwt.sign({username: user.username}, process.env.SECRET_KEY)
-          res.set({'Authorization', 'Bearer '+token}).send('Login Success')
+          let token = jwt.sign({id: user._id, username: user.username}, process.env.SECRET_KEY)
+          res.send(token)
         } else {
-          res.send('Login Failed')
+          res.sendStatus(403)
         }
       }
     })
@@ -43,6 +43,17 @@ module.exports = {
         res.send(users)
       }
     })
+  },
+  findOneUser : (req,res)=> {
+    User.findOne({username: req.params.username})
+      .populate('postId')
+      .exec((err, user)=> {
+        if(err) {
+          res.send(err)
+        } else {
+          res.send(user)
+        }
+      })
   },
   deleteUser : (req, res)=> {
     User.findOneAndRemove({username: req.params.username}, (err, user)=> {

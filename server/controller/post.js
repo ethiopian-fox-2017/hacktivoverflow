@@ -7,7 +7,7 @@ module.exports = {
   ask : (req, res)=> {
     let decoded = Help.decode(req.headers.token)
     let newPost = Post({
-      user : decoded.username,
+      user : decoded.id,
       title: req.body.title,
       content: req.body.content
     })
@@ -16,7 +16,7 @@ module.exports = {
           res.send(err)
         } else {
           console.log('Data added')
-          User.update({username: decoded.username},{$push: {postId: post._id}}, {new: true, safe: true, upsert: true}).exec((error, result)=> {
+          User.update({_id: decoded.id},{$push: {postId: post._id}}, {new: true, safe: true, upsert: true}).exec((error, result)=> {
             if(error) {
               console.log('Error update')
               res.send(error)
@@ -35,12 +35,19 @@ module.exports = {
         res.send(err)
       } else {
         post.answers.push({
-          user : decoded.username,
+          user : decoded.id,
           title: req.body.title,
           content: req.body.content
         })
-        console.log('Answer created')
-        res.send('Answer created')
+        post.save((err)=> {
+          if(err) {
+            console.log(err)
+            res.send(err)
+          } else {
+            console.log('Answer created')
+            res.send('Answer created')
+          }
+        })
       }
     })
   },
@@ -50,10 +57,10 @@ module.exports = {
       if(err) {
         res.send(err)
       } else {
-        if(post.votes.some((vote)=> {vote.user == decoded.username})) {
+        if(post.votes.some((vote)=> {return vote.user == decoded.id})) {
           res.send('You can vote once')
         } else {
-          Post.update({_id: post._id}, {$push: {count: req.body.count, user: decoded.username}}, {new: true})
+          Post.update({_id: post._id}, {$push: {votes: {count: req.body.count, user: decoded.id}}}, {new: true})
             .exec((error, data)=> {
               if(error) {
                 res.send(error)
@@ -72,11 +79,11 @@ module.exports = {
         res.send(err)
       } else {
         let answer = post.answers.id(req.params.answerId)
-        if(answer.user == decoded.username) {
+        if(answer.votes.some((vote)=> {return vote.user == decoded.id})) {
           res.send('You already voted')
         } else {
-          Post.findOneAndUpdate({answers._id: req.params.answerId}, {
-            $push: {answers.$.votes: {user: decoded.username, count: req.body.count}}
+          Post.findOneAndUpdate({_id: req.params.postId , 'answers._id': req.params.answerId}, {
+            $push: {'answers.$.votes': {user: decoded.id, count: req.body.count}}
           }, {new: true}, (error, result)=> {
             if(error) {
               res.send(error)
@@ -99,7 +106,7 @@ module.exports = {
       }
     })
   },
-  getOneQuestion : ()=> {
+  getOneQuestion : (req,res)=> {
     Post.findOne({_id: req.params.postId})
       .populate('user answers.user')
       .exec((err, post)=> {
@@ -116,7 +123,8 @@ module.exports = {
         res.send(err)
       } else {
         console.log('Post deleted')
-        User.update({username: post.user}, { $pullAll : {postId: post._id} }).exec((error, result)=> {
+        console.log(post.user)
+        User.update({_id: post.user}, { $pullAll : [{postId: post._id}] }).exec((error, result)=> {
           if(error) {
             console.log('Error update user data')
             res.send(error)

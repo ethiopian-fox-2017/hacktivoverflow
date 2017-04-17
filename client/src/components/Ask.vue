@@ -11,8 +11,8 @@
             <p class="control"><input class="input" v-model="title" type="text" placeholder="Question title"></p>
           </div>
           <div class="field">
-            <label class="label">Password</label>
-            <p class="control"><textarea class="input" v-model="content" placeholder="Ask here"></textarea></p>
+            <label class="label">Content</label>
+            <p class="control"><textarea class="textarea" v-model="content" placeholder="Ask here"></textarea></p>
           </div>
           <div class="field">
             <p class="control"><button class="button is-primary" @click="ask()">Submit</button></p>
@@ -28,21 +28,21 @@ export default {
   name: 'ask',
   data () {
     return {
-      username: '',
-      password: ''
+      title: '',
+      content: ''
     }
   },
   methods: {
     ask() {
       let self = this
       axios.post('http://localhost:3000/api/post/question', {
-        username: self.username,
-        password: self.password
+        title: self.title,
+        content: self.content
       }, {headers: {'token': self.$store.state.userToken}}).then((res)=> {
-        alert('Register Success')
+        alert('Ask success')
         self.$route.router.go('Main')
       }).catch((err)=> {
-        alert('Register Failed')
+        alert('Ask failed')
         window.location.reload()
       })
     }

@@ -6,10 +6,10 @@
         <article v-if="datas.length > 0" v-for="data in datas" class="box">
           <div class="content is-large">
             <h2 class="subtitle">{{ data.title }}</h2>
-            <p>{{ data.content }}</p>
+            <p>By {{ data.user.username }}</p>
           </div>
-          <div v-if="this.$store.state.loggedUser !== data.user.username" class="field is-grouped">
-            <p class="control"><a class="button" @click="vote(1)"><span class="icon is-small"><i class="fa fa-caret-up"></i></span></a></p>
+          <div v-if="logg" class="field is-grouped">
+            <p class="control"><a class="button" @click="vote(1, data._id)"><span class="icon is-small"><i class="fa fa-caret-up"></i></span></a></p>
             <p class="control">{{ voteCount.length }}</p>
             <p class="control"><a class="button" @click="vote(-1)"><span class="icon is-small"><i class="fa fa-caret-down"></i></span></a></p>
           </div>
@@ -17,7 +17,7 @@
       </div>
       <div class="column is-one-quarters">
         <aside class="menu">
-          <button v-if="this.$store.state.loggedUser" class="ask button is-primary"><router-link :to="">Ask a Question</router-link></button>
+          <router-link v-if="this.$store.state.loggedUser" to="/ask" class="ask button is-primary">Ask a Question</router-link>
         </aside>
       </div>
     </div>
@@ -31,8 +31,8 @@ export default {
     return {
       msg: 'Welcome to Hacktivoverflow',
       datas: [],
-      selectedQ: null,
-      voteCount : []
+      voteCount: [],
+      logg: this.$store.state.loggedUser
     }
   },
   methods: {
@@ -40,16 +40,26 @@ export default {
       let self = this
       axios.get('http://localhost:3000/api/post')
         .then((res)=> {
+          console.log(res.data[0].user.username)
           self.datas = res.data
-          self.selectedQ = res.data[0]
+          console.log(self.datas[0].votes)
+          let totalVote = res.data.votes.filter((val)=> {return val.count == 1})
+          self.voteCount = totalVote
         })
         .catch((err)=> {
           console.log(err)
           alert('Server error')
         })
     },
-    selectData(data) {
-      self.selectedQ = data
+    vote(count, id) {
+      let self = this
+      axios.post('http://localhost:3000/api/vote/question/'+id, {
+        count: count
+      }, {headers: {'token': self.$store.state.userToken}}).then((res)=> {
+
+      }).catch((err)=> {
+        
+      })
     }
   },
   mounted() {

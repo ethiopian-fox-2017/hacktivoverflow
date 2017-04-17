@@ -3,7 +3,6 @@ let Schema = mongoose.Schema
 
 let answerSchema = new Schema({
   user: {type: Schema.Types.ObjectId, ref: 'User'},
-  title: String,
   content: String,
   votes: [{
     user: {type: Schema.Types.ObjectId, ref: 'User'},

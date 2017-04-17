@@ -36,7 +36,6 @@ module.exports = {
       } else {
         post.answers.push({
           user : decoded.id,
-          title: req.body.title,
           content: req.body.content
         })
         post.save((err)=> {
@@ -58,7 +57,7 @@ module.exports = {
         res.send(err)
       } else {
         if(post.votes.some((vote)=> {return vote.user == decoded.id})) {
-          res.send('You can vote once')
+          res.status(403).send('You only can vote once')
         } else {
           Post.update({_id: post._id}, {$push: {votes: {count: req.body.count, user: decoded.id}}}, {new: true})
             .exec((error, data)=> {

@@ -10,12 +10,12 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-var index = require('./routes/index');
+// var index = require('./routes/index');
+//
+// app.use('/', index);
 
-app.use('/', index);
-
-// app.use('/', (req,res,next) => {
-//     res.send('hello');
-// })
+app.use('/', (req,res,next) => {
+    res.send('hello');
+})
 
 app.listen(3000);

@@ -1,0 +1,30 @@
+http :80
+https :443
+
+http://localhost:80/products
+  |        |           |
+  V        V           V
+protokol  host       router
+
+ip: alamat fisik
+host: domain (DNS)
+
+
+start: "node app.js"
+
+Docker:
+- sebuah kapal yang isinya sebuah aplikasi
+- seperti sebuah virtual mesin tapi tanpa menggunakan GUI
+- docker butuh docker file seperti package.json
+    *buat Dockerfile
+      -FROM node:boron
+      -RUN mkdir -p /usr/src/app
+      -WORKDIR /usr/src/app
+      -COPY package.json /usr/src/app/
+      -RUN npm install
+      -COPY . /usr/src/app
+      -EXPOSE 8080
+      -CMD ["npm", "start"]
+      -build your image
+
+    * buat .dockerignore
